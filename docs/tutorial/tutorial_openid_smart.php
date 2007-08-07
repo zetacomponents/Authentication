@@ -20,7 +20,10 @@ else
 {
     $options = new ezcAuthenticationOpenidOptions();
     $options->mode = ezcAuthenticationOpenidFilter::MODE_SMART;
+
+    // define a file store
     $options->store = new ezcAuthenticationOpenidFileStore( '/tmp/store' );
+
     $filter = new ezcAuthenticationOpenidFilter( $options );
     $authentication->addFilter( $filter );
 }
