@@ -38,7 +38,13 @@
     },
     "description": "The purpose of the Authentication component is to provide support for different means of identification and authentication of users using different providers and protocols.",
     "homepage": "https://github.com/zetacomponents",
-    "license": "apache2",
+    "license": "Apache-2.0",
     "name": "zetacomponents/authentication",
-    "type": "library"
+    "type": "library",
+    "require": {
+        "zetacomponents/base": "*"
+    },
+    "require-dev": {
+        "zetacomponents/unit-test": "*"
+    }
 }
