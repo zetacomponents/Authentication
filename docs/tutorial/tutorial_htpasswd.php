@@ -18,7 +18,7 @@ if ( !$authentication->run() )
             );
     foreach ( $status as $line )
     {
-        list( $key, $value ) = each( $line );
+        $value = current( $line ); $key = key( $line );
         echo $err[$key][$value] . "\n";
     }
 }
