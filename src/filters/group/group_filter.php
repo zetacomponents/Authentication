@@ -80,7 +80,8 @@
  *             );
  *     foreach ( $status as $line => $error )
  *     {
- *         $value = current( $error ); $key = key( $error );
+ *         $value = current( $error );
+ *         $key = key( $error );
  *         echo $err[$line][$key][$value] . "\n";
  *     }
  * }
@@ -133,7 +134,8 @@
  *
  *     foreach ( $status as $line => $error )
  *     {
- *         $value = current( $error ); $key = key( $error );
+ *         $value = current( $error );
+ *         $key = key( $error );
  *         echo $err[$line][$key][$value] . "\n";
  *     }
  * }
