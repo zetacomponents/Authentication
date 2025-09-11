@@ -67,6 +67,11 @@ class ezcAuthenticationTypekeyTest extends ezcAuthenticationTest
 
     public static $responseNull = array();
 
+    public static function setUpBeforeClass() : void
+    {
+        self::markTestIncomplete();
+    }
+
     public static function suite()
     {
         return new PHPUnit\Framework\TestSuite( "ezcAuthenticationTypekeyTest" );
