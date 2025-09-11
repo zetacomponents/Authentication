@@ -8,9 +8,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -25,7 +25,7 @@
  * @subpackage Tests
  */
 
-include_once( 'Authentication/tests/test.php' );
+include_once( 'tests/test.php' );
 
 /**
  * @package Authentication
@@ -43,10 +43,10 @@ class ezcAuthenticationLdapTest extends ezcAuthenticationTest
 
     public static function suite()
     {
-        return new PHPUnit_Framework_TestSuite( "ezcAuthenticationLdapTest" );
+        return new PHPUnit\Framework\TestSuite( "ezcAuthenticationLdapTest" );
     }
 
-    public function setUp()
+    public function setUp() : void
     {
         if ( !ezcBaseFeatures::hasExtensionSupport( 'ldap' ) )
         {
@@ -65,11 +65,6 @@ class ezcAuthenticationLdapTest extends ezcAuthenticationTest
             // this will be changed later when we will have a test server with LDAP
             $this->markTestSkipped( "Cannot connect to LDAP. Probably you didn't setup the LDAP enviroment: " . $e->getMessage() );
         }
-    }
-
-    public function tearDown()
-    {
-
     }
 
     public function testLdapTLS()
