@@ -8,9 +8,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -25,7 +25,7 @@
  * @subpackage Tests
  */
 
-include_once( 'Authentication/tests/test.php' );
+include_once( 'tests/test.php' );
 
 /**
  * @package Authentication
@@ -36,23 +36,13 @@ class ezcAuthenticationGroupTest extends ezcAuthenticationTest
 {
     private static $path = null;
     private static $empty = null;
-    
+
     public static function suite()
     {
         self::$path = dirname( __FILE__ ) . '/../htpasswd/data/htpasswd';
         self::$empty = dirname( __FILE__ ) . '/../htpasswd/data/htpasswd_empty';
 
-        return new PHPUnit_Framework_TestSuite( "ezcAuthenticationGroupTest" );
-    }
-
-    public function setUp()
-    {
-
-    }
-
-    public function tearDown()
-    {
-
+        return new PHPUnit\Framework\TestSuite( "ezcAuthenticationGroupTest" );
     }
 
     public function testGroupOrEmpty()
