@@ -9,9 +9,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -108,7 +108,7 @@ class ezcAuthenticationHtpasswdFilter extends ezcAuthenticationFilter
      * @param string $file The path and file name of the htpasswd file to use
      * @param ezcAuthenticationHtpasswdOptions $options Options for this class
      */
-    public function __construct( $file, ezcAuthenticationHtpasswdOptions $options = null )
+    public function __construct( $file, ?ezcAuthenticationHtpasswdOptions $options = null )
     {
         $this->file = $file;
         $this->options = ( $options === null ) ? new ezcAuthenticationHtpasswdOptions() : $options;
@@ -232,7 +232,7 @@ class ezcAuthenticationHtpasswdFilter extends ezcAuthenticationFilter
             }
             else
             {
-                $password = ( $this->options->plain ) ? crypt( $credentials->password, $hashFromFile ) :
+                $password = ( $this->options->plain ) ? crypt( $credentials->password ? $credentials->password : '', $hashFromFile ) :
                                                         $credentials->password;
             }
             if ( $password === $hashFromFile )

@@ -9,9 +9,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -84,21 +84,21 @@ class ezcAuthentication
 {
     /**
      * The filter queue of the authentication process.
-     * 
+     *
      * @var array(ezcAuthenticationFilter)
      */
     protected $filters = array();
 
     /**
      * Options for the Authentication object.
-     * 
+     *
      * @var ezcAuthenticationOptions
      */
     protected $options;
 
     /**
      * The properties of this class.
-     * 
+     *
      * @var array(string=>mixed)
      */
     private $properties = array();
@@ -109,7 +109,7 @@ class ezcAuthentication
      * @param ezcAuthenticationCredentials $credentials Authentication credentials
      * @param ezcAuthenticationOptions $options Options for this class
      */
-    public function __construct( ezcAuthenticationCredentials $credentials, ezcAuthenticationOptions $options = null )
+    public function __construct( ezcAuthenticationCredentials $credentials, ?ezcAuthenticationOptions $options = null )
     {
         $this->credentials = $credentials;
         $this->status = new ezcAuthenticationStatus();
@@ -263,7 +263,8 @@ class ezcAuthentication
                     // status of the Authentication object
                     foreach ( $statuses as $status )
                     {
-                        list( $key, $value ) = each( $status );
+                        $key = key( $status );
+                        $value = current( $status );
                         $this->status->append( $key, $value );
                     }
                 }
@@ -328,7 +329,7 @@ class ezcAuthentication
      *        array( 'ezcAuthenticationDatabaseFilter' => ezcAuthenticationDatabaseFilter::STATUS_PASSWORD_INCORRECT )
      *      );
      * </code>
-     * 
+     *
      * @return array(string=>mixed)
      */
     public function getStatus()

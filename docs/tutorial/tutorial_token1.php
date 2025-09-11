@@ -6,7 +6,7 @@ $pattern = "1234567890abcdefghijklmnopqrstuvwxyz";
 $token  = "";
 for( $i = 1; $i <= 6 ; $i++ )
 {
-    $token .= $pattern{rand( 0, 36 )};
+    $token .= $pattern[rand( 0, 36 )];
 }
 $encryptedToken = sha1( $token );
 
