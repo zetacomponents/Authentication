@@ -234,6 +234,13 @@ class ezcAuthenticationSession
     {
         if ( session_id() === '' && PHP_SAPI !== 'cli' )
         {
+            session_set_cookie_params( [
+                'lifetime' => 0,
+                'path'     => '/',
+                'secure'   => true,
+                'httponly' => true,
+                'samesite' => 'Lax',
+            ] );
             session_start();
         }
     }
@@ -257,6 +264,12 @@ class ezcAuthenticationSession
      */
     public function save( $data )
     {
+        // Regenerate session ID on login to prevent session fixation attacks.
+        // Passing true deletes the old session file from storage.
+        if ( !headers_sent() && PHP_SAPI !== 'cli' )
+        {
+            session_regenerate_id( true );
+        }
         $_SESSION[$this->options->idKey] = $data;
         $_SESSION[$this->options->timestampKey] = time();
         $_SESSION[$this->options->lastActivityTimestampKey] = time();
@@ -279,9 +292,8 @@ class ezcAuthenticationSession
     {
         if ( !headers_sent() )
         {
-            // ???? seems that PHPSESSID is not regenerated if session is destroyed first????
-            // session_destroy();
-            session_regenerate_id();
+            // Pass true to delete the old session file and prevent session replay.
+            session_regenerate_id( true );
         }
     }
 
