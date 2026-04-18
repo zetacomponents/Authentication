@@ -434,7 +434,21 @@ class ezcAuthenticationOpenidFilter extends ezcAuthenticationFilter implements e
                 $returnTo = isset( $source['openid_return_to'] ) ? $source['openid_return_to'] : null;
                 $claimedId = isset( $source['openid_claimed_id'] ) ? $source['openid_claimed_id'] : null;
 
-                // @todo add verification of openid_identity and openid_claimed_id to the initial openid_identifier
+                // Verify that the returned identity matches the initially supplied identifier.
+                // Without this check an attacker can initiate OpenID with a legitimate provider
+                // but supply a different openid_identity in the id_res response (auth bypass).
+                if ( !empty( $credentials->id ) && $identity !== null )
+                {
+                    $normalizedInitial  = ezcAuthenticationUrl::normalize( $credentials->id );
+                    $normalizedIdentity = ezcAuthenticationUrl::normalize( $identity );
+                    $normalizedClaimed  = $claimedId !== null ? ezcAuthenticationUrl::normalize( $claimedId ) : null;
+
+                    if ( $normalizedIdentity !== $normalizedInitial &&
+                         $normalizedClaimed  !== $normalizedInitial )
+                    {
+                        return self::STATUS_SIGNATURE_INCORRECT;
+                    }
+                }
 
                 if ( $this->options->store !== null )
                 {
@@ -924,6 +938,31 @@ class ezcAuthenticationOpenidFilter extends ezcAuthenticationFilter implements e
      * @param string $method The method to connect to the provider (default GET)
      * @return bool
      */
+    /**
+     * Validates that a hostname resolved from a provider URL is not a private
+     * or reserved IP address (SSRF protection).
+     *
+     * @throws ezcAuthenticationOpenidException if the host resolves to a disallowed IP
+     * @param string $host Hostname extracted from provider URL
+     * @return void
+     */
+    protected function assertPublicHost( $host )
+    {
+        if ( empty( $host ) )
+        {
+            throw new ezcAuthenticationOpenidException( "Invalid or empty OpenID provider host." );
+        }
+        $ip = gethostbyname( $host );
+        // filter_var returns false when the IP is private or reserved
+        if ( filter_var( $ip, FILTER_VALIDATE_IP,
+                         FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE ) === false )
+        {
+            throw new ezcAuthenticationOpenidException(
+                "OpenID provider host resolves to a disallowed (private/reserved) IP address."
+            );
+        }
+    }
+
     protected function checkImmediate( $provider, array $params, $method = 'GET' )
     {
         $parts = parse_url( $provider );
@@ -931,11 +970,12 @@ class ezcAuthenticationOpenidFilter extends ezcAuthenticationFilter implements e
         $host = isset( $parts['host'] ) ? $parts['host'] : null;
         $port = 80;
 
-        // suppress warnings caused by fsockopen() if $host is not a valid domain
-        $connection = @fsockopen( $host, $port, $errno, $errstr, $this->options->timeoutOpen );
+        $this->assertPublicHost( $host );
+
+        $connection = fsockopen( $host, $port, $errno, $errstr, $this->options->timeoutOpen );
         if ( !$connection )
         {
-            throw new ezcAuthenticationOpenidException( "Could not connect to host {$host}:{$port}: {$errstr}." );
+            throw new ezcAuthenticationOpenidException( "Could not connect to OpenID provider." );
         }
         else
         {
@@ -951,6 +991,16 @@ class ezcAuthenticationOpenidFilter extends ezcAuthenticationFilter implements e
             if ( preg_match( $pattern, $src, $matches ) > 0 )
             {
                 $returnUrl = trim( $matches[1] );
+
+                // Validate Location header: only follow redirects back to the same provider host.
+                $returnParts = parse_url( $returnUrl );
+                if ( ( isset( $returnParts['host'] ) ) &&
+                     ( $returnParts['host'] !== $host ) )
+                {
+                    throw new ezcAuthenticationOpenidException(
+                        "OpenID provider redirect targets unexpected host."
+                    );
+                }
 
                 // get the query parameters from the response URL
                 $query = parse_url( $returnUrl, PHP_URL_QUERY );
@@ -1017,11 +1067,12 @@ class ezcAuthenticationOpenidFilter extends ezcAuthenticationFilter implements e
         $host = isset( $parts['host'] ) ? $parts['host'] : null;
         $port = 443;
 
-        // suppress warnings caused by fsockopen() if $host is not a valid domain
-        $connection = @fsockopen( 'ssl://' . $host, $port, $errno, $errstr, $this->options->timeoutOpen );
+        $this->assertPublicHost( $host );
+
+        $connection = fsockopen( 'ssl://' . $host, $port, $errno, $errstr, $this->options->timeoutOpen );
         if ( !$connection )
         {
-            throw new ezcAuthenticationOpenidException( "Could not connect to host {$host}:{$port}: {$errstr}." );
+            throw new ezcAuthenticationOpenidException( "Could not connect to OpenID provider." );
         }
         else
         {
