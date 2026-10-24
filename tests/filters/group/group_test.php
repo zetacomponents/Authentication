@@ -52,7 +52,7 @@ class ezcAuthenticationGroupTest extends ezcAuthenticationTest
         $options = new ezcAuthenticationHtpasswdOptions();
         $options->plain = true;
         $authentication->addFilter( new ezcAuthenticationGroupFilter( array() ) );
-        $this->assertEquals( true, $authentication->run() );
+        $this->assertEquals( false, $authentication->run() );
     }
 
     public function testGroupAndEmpty()
@@ -64,7 +64,19 @@ class ezcAuthenticationGroupTest extends ezcAuthenticationTest
         $options = new ezcAuthenticationHtpasswdOptions();
         $options->plain = true;
         $authentication->addFilter( new ezcAuthenticationGroupFilter( array(), $optionsGroup ) );
-        $this->assertEquals( true, $authentication->run() );
+        $this->assertEquals( false, $authentication->run() );
+    }
+
+    public function testGroupEmptyStatus()
+    {
+        $credentials = new ezcAuthenticationPasswordCredentials( 'john.doe', 'foobar' );
+        $filter = new ezcAuthenticationGroupFilter( array() );
+        $this->assertEquals( ezcAuthenticationGroupFilter::STATUS_GROUP_FAILED, $filter->run( $credentials ) );
+
+        $optionsGroup = new ezcAuthenticationGroupOptions();
+        $optionsGroup->mode = ezcAuthenticationGroupFilter::MODE_AND;
+        $filter = new ezcAuthenticationGroupFilter( array(), $optionsGroup );
+        $this->assertEquals( ezcAuthenticationGroupFilter::STATUS_GROUP_FAILED, $filter->run( $credentials ) );
     }
 
     public function testGroupOrHtpasswdPass()

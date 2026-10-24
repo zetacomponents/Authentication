@@ -43,7 +43,7 @@ class ezcAuthenticationGeneralTest extends ezcAuthenticationTest
     {
         $credentials = new ezcAuthenticationIdCredentials( 'john.doe' );
         $authentication = new ezcAuthentication( $credentials );
-        $this->assertEquals( true, $authentication->run() );
+        $this->assertEquals( false, $authentication->run() );
     }
 
     public function testGeneralStatus()

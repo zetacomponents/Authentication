@@ -29,7 +29,7 @@
  * Group authentication filters together.
  *
  * If there are no filters in the group, then the run() method will return
- * STATUS_OK.
+ * STATUS_GROUP_FAILED.
  *
  * The way of grouping the filters is specified with the mode option:
  *  - ezcAuthenticationGroupFilter::MODE_OR (default): at least one filter
@@ -322,7 +322,7 @@ class ezcAuthenticationGroupFilter extends ezcAuthenticationFilter
     {
         if ( count( $this->filters ) === 0 )
         {
-            return self::STATUS_OK;
+            return self::STATUS_GROUP_FAILED;
         }
 
         $success = false;

@@ -235,7 +235,7 @@ class ezcAuthenticationHtpasswdFilter extends ezcAuthenticationFilter
                 $password = ( $this->options->plain ) ? crypt( $credentials->password ? $credentials->password : '', $hashFromFile ) :
                                                         $credentials->password;
             }
-            if ( $password === $hashFromFile )
+            if ( hash_equals( $hashFromFile, (string) $password ) )
             {
                 return self::STATUS_OK;
             }

@@ -67,6 +67,20 @@ class ezcAuthenticationHtpasswdTest extends ezcAuthenticationTest
         $this->assertEquals( false, $authentication->run() );
     }
 
+    public function testHtpasswdPlainPasswordEmpty()
+    {
+        $credentials = new ezcAuthenticationPasswordCredentials( 'hans.mustermann', '' );
+        $filter = new ezcAuthenticationHtpasswdFilter( self::$path );
+        $this->assertEquals( ezcAuthenticationHtpasswdFilter::STATUS_PASSWORD_INCORRECT, $filter->run( $credentials ) );
+    }
+
+    public function testHtpasswdPlainPasswordWrongLength()
+    {
+        $credentials = new ezcAuthenticationPasswordCredentials( 'hans.mustermann', 'abcdefg' );
+        $filter = new ezcAuthenticationHtpasswdFilter( self::$path );
+        $this->assertEquals( ezcAuthenticationHtpasswdFilter::STATUS_PASSWORD_INCORRECT, $filter->run( $credentials ) );
+    }
+
     public function testHtpasswdCrypt()
     {
         $credentials = new ezcAuthenticationPasswordCredentials( 'john.doe', 'foobar' );

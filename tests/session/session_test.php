@@ -170,6 +170,102 @@ class ezcAuthenticationSessionTest extends ezcAuthenticationTest
         $this->assertEquals( false, $session->isValid( $credentials ) );
     }
 
+    public function testSessionRegenerateIdWithoutActiveSession()
+    {
+        if ( session_status() === PHP_SESSION_ACTIVE )
+        {
+            $this->markTestSkipped( 'A session is active.' );
+        }
+        $session = new ezcAuthenticationSession();
+        $this->assertFalse( $session->regenerateId() );
+    }
+
+    public function testSessionSaveNewLoginRegeneratesId()
+    {
+        $_SESSION = array();
+        $session = $this->getMockBuilder( 'ezcAuthenticationSession' )
+                        ->onlyMethods( array( 'regenerateId' ) )
+                        ->getMock();
+        $session->expects( $this->once() )
+                ->method( 'regenerateId' );
+        $session->save( self::$id );
+        $this->assertEquals( self::$id, $_SESSION[self::$idKey] );
+    }
+
+    public function testSessionSaveOtherUserRegeneratesId()
+    {
+        $_SESSION = array( self::$idKey => 'jan.modaal' );
+        $session = $this->getMockBuilder( 'ezcAuthenticationSession' )
+                        ->onlyMethods( array( 'regenerateId' ) )
+                        ->getMock();
+        $session->expects( $this->once() )
+                ->method( 'regenerateId' );
+        $session->save( self::$id );
+        $this->assertEquals( self::$id, $_SESSION[self::$idKey] );
+    }
+
+    public function testSessionSaveSameUserKeepsId()
+    {
+        $_SESSION = array( self::$idKey => self::$id );
+        $session = $this->getMockBuilder( 'ezcAuthenticationSession' )
+                        ->onlyMethods( array( 'regenerateId' ) )
+                        ->getMock();
+        $session->expects( $this->never() )
+                ->method( 'regenerateId' );
+        $session->save( self::$id );
+        $this->assertEquals( self::$id, $_SESSION[self::$idKey] );
+    }
+
+    public function testSessionRunFilterLoginRegeneratesId()
+    {
+        $_SESSION = array();
+        $credentials = new ezcAuthenticationPasswordCredentials( 'john.doe', 'foobar' );
+        $authentication = new ezcAuthentication( $credentials );
+        $session = $this->getMockBuilder( 'ezcAuthenticationSession' )
+                        ->onlyMethods( array( 'regenerateId' ) )
+                        ->getMock();
+        $session->expects( $this->once() )
+                ->method( 'regenerateId' );
+        $authentication->session = $session;
+        $options = new ezcAuthenticationHtpasswdOptions();
+        $options->plain = true;
+        $authentication->addFilter( new ezcAuthenticationHtpasswdFilter( dirname( __FILE__ ) . '/../filters/htpasswd/data/htpasswd', $options ) );
+        $this->assertEquals( true, $authentication->run() );
+        $this->assertEquals( 'john.doe', $_SESSION[self::$idKey] );
+    }
+
+    public function testSessionRunFilterFailKeepsId()
+    {
+        $_SESSION = array();
+        $credentials = new ezcAuthenticationPasswordCredentials( 'john.doe', 'wrong password' );
+        $authentication = new ezcAuthentication( $credentials );
+        $session = $this->getMockBuilder( 'ezcAuthenticationSession' )
+                        ->onlyMethods( array( 'regenerateId' ) )
+                        ->getMock();
+        $session->expects( $this->never() )
+                ->method( 'regenerateId' );
+        $authentication->session = $session;
+        $options = new ezcAuthenticationHtpasswdOptions();
+        $options->plain = true;
+        $authentication->addFilter( new ezcAuthenticationHtpasswdFilter( dirname( __FILE__ ) . '/../filters/htpasswd/data/htpasswd', $options ) );
+        $this->assertEquals( false, $authentication->run() );
+        $this->assertEquals( false, isset( $_SESSION[self::$idKey] ) );
+    }
+
+    public function testSessionRunValidSessionKeepsId()
+    {
+        $_SESSION = array( self::$idKey => self::$id, self::$timestampKey => time() );
+        $credentials = new ezcAuthenticationIdCredentials( self::$id );
+        $authentication = new ezcAuthentication( $credentials );
+        $session = $this->getMockBuilder( 'ezcAuthenticationSession' )
+                        ->onlyMethods( array( 'regenerateId' ) )
+                        ->getMock();
+        $session->expects( $this->never() )
+                ->method( 'regenerateId' );
+        $authentication->session = $session;
+        $this->assertEquals( true, $authentication->run() );
+    }
+
     public function testSessionOptions()
     {
         $options = new ezcAuthenticationSessionOptions();

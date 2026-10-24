@@ -236,6 +236,10 @@ class ezcAuthentication
     /**
      * Runs through all the filters in the filter list.
      *
+     * Returns false if the authentication needs to run the filters (no session
+     * was set, or the session did not contain an authenticated user) and no
+     * filter was added.
+     *
      * @return bool
      */
     public function run()
@@ -252,6 +256,12 @@ class ezcAuthentication
 
         if ( !isset( $this->session ) || $code === ezcAuthenticationSession::STATUS_EMPTY )
         {
+            // without any filter nothing was authenticated
+            if ( count( $this->filters ) === 0 )
+            {
+                return false;
+            }
+
             foreach ( $this->filters as $filter )
             {
                 $code = $filter[0]->run( $credentials );
