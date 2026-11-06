@@ -46,7 +46,9 @@ if ( !$authentication->run() )
     $err["session"] = "";
     for ( $i = 0; $i < count( $status ); $i++ )
     {
-        list( $key, $value ) = each( $status[$i] );
+        $value = current( $status[$i] );
+        $key = key( $status[$i] );
+
         switch ( $key )
         {
             case 'ezcAuthenticationOpenidFilter':

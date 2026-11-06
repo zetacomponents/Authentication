@@ -58,7 +58,8 @@
  *             );
  *     foreach ( $status as $line )
  *     {
- *         list( $key, $value ) = each( $line );
+ *         $value = current( $line );
+ *         $key = key( $line );
  *         echo $err[$key][$value] . "\n";
  *     }
  * }
@@ -263,8 +264,8 @@ class ezcAuthentication
                     // status of the Authentication object
                     foreach ( $statuses as $status )
                     {
-                        $key = key( $status );
                         $value = current( $status );
+                        $key = key( $status );
                         $this->status->append( $key, $value );
                     }
                 }
