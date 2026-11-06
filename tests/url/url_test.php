@@ -8,9 +8,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -25,7 +25,7 @@
  * @subpackage Tests
  */
 
-include_once( 'Authentication/tests/test.php' );
+include_once( 'tests/test.php' );
 
 /**
  * @package Authentication
@@ -74,7 +74,7 @@ class ezcAuthenticationUrlTest extends ezcAuthenticationTest
         array( 'fo.o=bar&answer=42',            array( 'fo.o'   => 'bar', 'answer' => 42 ),                   'fo.o=bar&answer=42' ),
 
         array( 'foo[=bar',                      array( 'foo_'   => 'bar' ),                                   'foo_=bar' ),
-        array( 'foo[[=bar',                     array( 'foo_['  => 'bar' ),                                   'foo_[=bar' ),
+        array( 'foo[[=bar',                     array( 'foo__'  => 'bar' ),                                   'foo__=bar' ),
         array( 'foo]=bar',                      array( 'foo]'   => 'bar' ),                                   'foo]=bar' ),
         array( 'foo]]=bar',                     array( 'foo]]'  => 'bar' ),                                   'foo]]=bar' ),
         array( 'foo][=bar',                     array( 'foo]_'  => 'bar' ),                                   'foo]_=bar' ),
@@ -82,10 +82,10 @@ class ezcAuthenticationUrlTest extends ezcAuthenticationTest
         array( 'foo][]=bar',                    array( 'foo]'   => array( 'bar' ) ),                          'foo][0]=bar' ),
         array( 'foo[][=bar',                    array( 'foo'    => array( 'bar' ) ),                          'foo[0]=bar' ),
         array( 'foo[]]=bar',                    array( 'foo'    => array( 'bar' ) ),                          'foo[0]=bar' ),
-        array( 'foo][[=bar',                    array( 'foo]_[' => 'bar' ),                                   'foo]_[=bar' ),
+        array( 'foo][[=bar',                    array( 'foo]__' => 'bar' ),                                   'foo]__=bar' ),
 
         array( 'fo[o=bar',                      array( 'fo_o'   => 'bar' ),                                   'fo_o=bar' ),
-        array( 'fo[[o=bar',                     array( 'fo_[o'  => 'bar' ),                                   'fo_[o=bar' ),
+        array( 'fo[[o=bar',                     array( 'fo__o'  => 'bar' ),                                   'fo__o=bar' ),
         array( 'fo]o=bar',                      array( 'fo]o'   => 'bar' ),                                   'fo]o=bar' ),
         array( 'fo]]o=bar',                     array( 'fo]]o'  => 'bar' ),                                   'fo]]o=bar' ),
         array( 'fo][o=bar',                     array( 'fo]_o'  => 'bar' ),                                   'fo]_o=bar' ),
@@ -94,7 +94,7 @@ class ezcAuthenticationUrlTest extends ezcAuthenticationTest
         array( 'foo[][o=bar',                   array( 'foo'    => array( 'bar' ) ),                          'foo[0]=bar' ),
         array( 'foo[]]o=bar',                   array( 'foo'    => array( 'bar' ) ),                          'foo[0]=bar' ),
         array( 'fo[]o=bar',                     array( 'fo'     => array( 'bar' ) ),                          'fo[0]=bar' ),
-        array( 'fo][[o=bar',                    array( 'fo]_[o' => 'bar' ),                                   'fo]_[o=bar' ),
+        array( 'fo][[o=bar',                    array( 'fo]__o' => 'bar' ),                                   'fo]__o=bar' ),
 
         array( 'foo[[0]o=bar',                  array( 'foo'    => array( '[0' => 'bar' ) ),                  'foo[[0]=bar' ),
         array( 'foo][0]o=bar',                  array( 'foo]'   => array( 'bar' ) ),                          'foo][0]=bar' ),
@@ -113,17 +113,7 @@ class ezcAuthenticationUrlTest extends ezcAuthenticationTest
 
     public static function suite()
     {
-        return new PHPUnit_Framework_TestSuite( "ezcAuthenticationUrlTest" );
-    }
-
-    public function setUp()
-    {
-
-    }
-
-    public function tearDown()
-    {
-
+        return new PHPUnit\Framework\TestSuite( "ezcAuthenticationUrlTest" );
     }
 
     public function testParseQueryString()

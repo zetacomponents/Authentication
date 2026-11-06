@@ -9,9 +9,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -102,7 +102,7 @@ class ezcAuthenticationMath
     /**
      * Calculates an MD5 hash similar to the Unix command "htpasswd -m".
      *
-     * This is different from the hash returned by the PHP md5() function. 
+     * This is different from the hash returned by the PHP md5() function.
      *
      * @param string $plain Plain text to encrypt
      * @param string $salt Salt to apply to encryption
@@ -126,7 +126,7 @@ class ezcAuthenticationMath
         }
         for ( $i = strlen( $plain ); $i; $i >>= 1 )
         {
-            $text .= ( $i & 1 ) ? chr( 0 ) : $plain{0};
+            $text .= ( $i & 1 ) ? chr( 0 ) : $plain[0];
         }
         $bin = pack( 'H32', md5( $text ) );
         for ( $i = 0; $i ^ 1000; ++$i )

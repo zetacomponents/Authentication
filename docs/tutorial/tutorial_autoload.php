@@ -9,12 +9,7 @@ switch ( $dirParts[count( $dirParts ) - 3] )
 }
 
 /**
- * Autoload ezc classes 
- * 
- * @param string $className 
+ * Autoload ezc classes
  */
-function __autoload( $className )
-{
-    ezcBase::autoload( $className );
-}
+spl_autoload_register('ezcBase::autoload');
 ?>

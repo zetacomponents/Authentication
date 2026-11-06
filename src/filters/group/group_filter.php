@@ -9,9 +9,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -172,14 +172,14 @@ class ezcAuthenticationGroupFilter extends ezcAuthenticationFilter
 
     /**
      * Authentication filters.
-     * 
+     *
      * @var array(ezcAuthenticationFilter)
      */
     protected $filters = array();
 
     /**
      * The properties of this class.
-     * 
+     *
      * @var array(string=>mixed)
      */
     private $properties = array();
@@ -217,7 +217,7 @@ class ezcAuthenticationGroupFilter extends ezcAuthenticationFilter
      * @param array(ezcAuthenticationFilter|mixed) $filters Authentication filters
      * @param ezcAuthenticationGroupOptions $options Options for this class
      */
-    public function __construct( array $filters, ezcAuthenticationGroupOptions $options = null )
+    public function __construct( array $filters, ?ezcAuthenticationGroupOptions $options = null )
     {
         $this->options = ( $options === null ) ? new ezcAuthenticationGroupOptions() : $options;
 
@@ -401,7 +401,7 @@ class ezcAuthenticationGroupFilter extends ezcAuthenticationFilter
      *                                                  with $filter if the multipleCredentials
      *                                                  option is enabled
      */
-    public function addFilter( ezcAuthenticationFilter $filter, ezcAuthenticationCredentials $credentials = null )
+    public function addFilter( ezcAuthenticationFilter $filter, ?ezcAuthenticationCredentials $credentials = null )
     {
         if ( $this->options->multipleCredentials === true )
         {

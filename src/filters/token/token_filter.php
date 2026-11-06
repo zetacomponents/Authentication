@@ -9,9 +9,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -108,7 +108,7 @@ class ezcAuthenticationTokenFilter extends ezcAuthenticationFilter
      * @param callback $function The encryption function to use when comparing tokens
      * @param ezcAuthenticationTokenOptions $options Options for this class
      */
-    public function __construct( $token, $function, ezcAuthenticationTokenOptions $options = null )
+    public function __construct( $token, $function, ?ezcAuthenticationTokenOptions $options = null )
     {
         $this->token = $token;
         $this->function = $function;
@@ -207,7 +207,7 @@ class ezcAuthenticationTokenFilter extends ezcAuthenticationFilter
      */
     public function run( $credentials )
     {
-        $password = call_user_func( $this->function, $credentials->id );
+        $password = call_user_func( $this->function, $credentials->id ? $credentials->id : '' );
         if ( $this->token === $password )
         {
             return self::STATUS_OK;

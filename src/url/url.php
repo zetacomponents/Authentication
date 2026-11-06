@@ -9,9 +9,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -64,7 +64,7 @@ class ezcAuthenticationUrl
      */
     public static function appendQuery( $url, $key, $value )
     {
-        $parts = parse_url( $url );
+        $parts = parse_url( $url ? $url : '' );
         if ( isset( $parts['query'] ) )
         {
             $parts['query'] = self::parseQueryString( $parts['query'] );
@@ -191,7 +191,7 @@ class ezcAuthenticationUrl
                 $newKey = '';
                 for ( $i = 0; $i < strlen( $paramKey ); $i++ )
                 {
-                    $newKey .= ( $paramKey{$i} === '_' && $key{$i} === '.' ) ? '.' : $paramKey{$i};
+                    $newKey .= ( $paramKey[$i] === '_' && $key[$i] === '.' ) ? '.' : $paramKey[$i];
                 }
 
                 $keys = array_keys( $params );
